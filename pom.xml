@@ -8,9 +8,9 @@
     <groupId>org.wangpai.globalshortcuts</groupId>
     <artifactId>global-shortcuts-fx</artifactId>
     <packaging>pom</packaging>
-    <version>4.1</version>
+    <version>4.2</version>
+
     <modules>
-        <module>jintellitype</module>
         <module>global-shortcuts</module>
         <module>global-shortcuts-demo</module>
     </modules>
@@ -22,26 +22,24 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- 凡是自定义的属性，都要加 .custom 后缀，以防与已有的预置属性相冲突 -->
-        <project.version.custom>4.1</project.version.custom>
+        <project.version.custom>4.2</project.version.custom>
 
         <junit.version.custom>5.9.0</junit.version.custom>
         <lombok.version.custom>1.18.24</lombok.version.custom>
         <apache-commons-collections4.version.custom>4.4</apache-commons-collections4.version.custom>
+
+        <jintellitype.version.custom>1.4.1</jintellitype.version.custom>
+
+        <mainclass.custom>敬请期待</mainclass.custom>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.wangpai.globalshortcuts</groupId>
-                <artifactId>jintellitype</artifactId>
-                <version>${project.version.custom}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wangpai.globalshortcuts</groupId>
                 <artifactId>global-shortcuts</artifactId>
                 <version>${project.version.custom}</version>
             </dependency>
-
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -55,14 +53,128 @@
                 <version>${junit.version.custom}</version>
                 <scope>test</scope>
             </dependency>
-
             <!-- 提供类 DualHashBidiMap -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>${apache-commons-collections4.version.custom}</version>
             </dependency>
+            <!-- 提供全局快捷键的支持 -->
+            <dependency>
+                <groupId>com.melloware</groupId>
+                <artifactId>jintellitype</artifactId>
+                <version>${jintellitype.version.custom}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+
+            <!-- 此插件必须放在父 POM 中  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!--
+                            设置将依赖整合到一个自定义名称的 JAR 包。
+                            如果不设置此项，依赖将整合到 Maven 无插件时的默认 JAR 包，并生成一个前缀为 original- 的无依赖 JAR 包
+                             -->
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <!-- 设置生成的 JAR 包后缀名 -->
+                            <shadedClassifierName>shaded-with-dependencies</shadedClassifierName>
+                            <!-- 设置程序运行入口 -->
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${mainclass.custom}</mainClass>
+                                </transformer>
+                            </transformers>
+                            <!-- 设置 JAR 包输出目录 -->
+                            <outputDirectory>${project.build.directory}/#maven-shade-plugin</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 此插件暂时没起到什么作用，留着以后备用 -->
+            <!--            &lt;!&ndash; 此插件必须放在父 POM 中  &ndash;&gt;-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-assembly-plugin</artifactId>-->
+            <!--                <version>3.3.0</version>-->
+            <!--                <executions>-->
+            <!--                    &lt;!&ndash;-->
+            <!--                    执行本插件的方法为，在主目录下执行如下命令：-->
+            <!--                    mvn package assembly:single-->
+
+            <!--                    对于 IntelliJ IDEA，生成的 JAR 包位于每个模块下的文件夹 target-->
+            <!--                    &ndash;&gt;-->
+            <!--                    <execution>-->
+            <!--                        <id>make-assembly</id>-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <goals>-->
+            <!--                            &lt;!&ndash; 此处 IntelliJ IDEA 可能会报红，这是正常现象  &ndash;&gt;-->
+            <!--                            <goal>single</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                <configuration>-->
+            <!--                    <archive>-->
+            <!--                        <manifest>-->
+            <!--                            &lt;!&ndash; 配置程序运行入口所在的类 &ndash;&gt;-->
+            <!--                            <mainClass>${mainClass}</mainClass>-->
+            <!--                        </manifest>-->
+            <!--                    </archive>-->
+            <!--                    &lt;!&ndash; 设置 JAR 包输出目录 &ndash;&gt;-->
+            <!--                    <outputDirectory>${project.build.directory}/#maven-assembly-plugin</outputDirectory>-->
+            <!--                    &lt;!&ndash; 设置打包后的 JAR 包的目录结构为默认 &ndash;&gt;-->
+            <!--                    <descriptorRefs>-->
+            <!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
+            <!--                    </descriptorRefs>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+
+            <!-- 此插件暂时没起到什么作用，留着以后备用 -->
+            <!--
+            此插件是用于拷贝该模块的资源文件指指定目录。
+            但生成的资源文件只包含本模块的资源文件，不包括其依赖的其它模块的资源文件
+            此插件可在生命周期 package 中被执行。
+            此插件往往与插件 maven-jar-plugin、maven-dependency-plugin 一起使用
+            -->
+            <!--            <plugin>-->
+            <!--                <artifactId>maven-resources-plugin</artifactId>-->
+            <!--                <version>3.2.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>copy-resources</id>-->
+            <!--                        &lt;!&ndash; 设置此插件执行的阶段，可更改为其它阶段 &ndash;&gt;-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>copy-resources</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            &lt;!&ndash; 设置资源文件输出目录 &ndash;&gt;-->
+            <!--                            <outputDirectory>${project.build.directory}/#maven-resources-plugin</outputDirectory>-->
+            <!--                            <resources>-->
+            <!--                                <resource>-->
+            <!--                                    &lt;!&ndash; 设置原资源文件所在目录 &ndash;&gt;-->
+            <!--                                    <directory>src/main/resources</directory>-->
+            <!--                                </resource>-->
+            <!--                            </resources>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+
+        </plugins>
+    </build>
 
 </project>

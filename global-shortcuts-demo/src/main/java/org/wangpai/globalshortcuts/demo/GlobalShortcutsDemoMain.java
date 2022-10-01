@@ -1,4 +1,4 @@
-package org.wangpai.demo;
+package org.wangpai.globalshortcuts.demo;
 
 import com.melloware.jintellitype.JIntellitype;
 import org.wangpai.globalshortcuts.GlobalShortcutsFX;
@@ -15,13 +15,12 @@ public class GlobalShortcutsDemoMain {
     private static void customActivity() {
         try {
             Thread.sleep(1000); // 模拟耗时任务（1 秒）
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException exception) {
+            exception.printStackTrace();
         }
     }
 
     public static void main(String[] args) throws GlobalShortcutsException {
-
         new GlobalShortcutsFX()
                 .setMainActivityAction(GlobalShortcutsDemoMain::customActivity)
                 .setRepeatable(true)
