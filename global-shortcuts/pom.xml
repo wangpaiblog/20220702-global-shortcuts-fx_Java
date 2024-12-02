@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.wangpai.globalshortcuts</groupId>
         <artifactId>global-shortcuts-fx</artifactId>
-        <version>4.2</version>
+        <version>5.0</version>
     </parent>
 
     <artifactId>global-shortcuts</artifactId>

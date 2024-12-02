@@ -1,5 +1,6 @@
 package org.wangpai.globalshortcuts.model;
 
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +46,6 @@ public class JIntellitypeShortcut {
      */
     @Override
     public int hashCode() {
-        return Integer.valueOf(this.modifier).hashCode() / 2
-                + Integer.valueOf(this.keycode).hashCode() / 2;
+        return Objects.hash(this.modifier, this.keycode);
     }
 }

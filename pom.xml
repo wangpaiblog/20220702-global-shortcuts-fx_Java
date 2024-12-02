@@ -8,7 +8,7 @@
     <groupId>org.wangpai.globalshortcuts</groupId>
     <artifactId>global-shortcuts-fx</artifactId>
     <packaging>pom</packaging>
-    <version>4.2</version>
+    <version>5.0</version>
 
     <modules>
         <module>global-shortcuts</module>
@@ -22,7 +22,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- 凡是自定义的属性，都要加 .custom 后缀，以防与已有的预置属性相冲突 -->
-        <project.version.custom>4.2</project.version.custom>
+        <project.version.custom>5.0</project.version.custom>
 
         <junit.version.custom>5.9.0</junit.version.custom>
         <lombok.version.custom>1.18.24</lombok.version.custom>
