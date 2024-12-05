@@ -1,4 +1,4 @@
-package org.wangpai.globalshortcuts.model;
+package org.wangpai.globalshortcuts.raw;
 
 /**
  * @since 2024-12-2

@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public abstract class GlobalShortcutsException extends Exception {
+public abstract class GlobalShortcutsException extends RuntimeException {
     private String exceptionMsg;
     private Object data;
 

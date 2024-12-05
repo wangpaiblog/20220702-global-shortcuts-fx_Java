@@ -1,4 +1,4 @@
-package org.wangpai.globalshortcuts.model;
+package org.wangpai.globalshortcuts.raw;
 
 import java.util.Objects;
 import lombok.AllArgsConstructor;
